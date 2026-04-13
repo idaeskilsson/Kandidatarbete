@@ -6,7 +6,20 @@ from src.filter_channels import filter_acquirable
 def run_build_features():
     os.makedirs("data/processed", exist_ok=True)
 
-    df = pd.read_csv("data/processed/model_dataset_with_target.csv")
+    channels = pd.read_csv("data/interim/channels_clean.csv")
+    videos = pd.read_csv("data/interim/videos_clean.csv")
+
+    video_agg = (
+        videos.groupby("channel_id")
+        .agg(
+            avg_views_per_video=("view_count", "mean"),
+            avg_likes_per_video=("like_count", "mean"),
+            avg_comments_per_video=("comment_count", "mean")
+        )
+        .reset_index()
+    )
+
+    df = channels.merge(video_agg, on="channel_id", how="inner")
 
     channels_df = pd.read_csv("data/raw/channels_raw.csv")
     df = filter_acquirable(df, channels_df)

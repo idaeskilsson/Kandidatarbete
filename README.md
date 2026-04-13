@@ -120,7 +120,6 @@ Kandidatarbete/
 │   ├── youtube_client.py      # Skapar YouTube API-klient via API-nyckel
 │   ├── collect_data.py        # Hämtar kanaler och videor från YouTube API
 │   ├── preprocess.py          # Rensar och filtrerar rådata
-│   ├── build_target.py        # Beräknar YouTube-värde (yv) per kanal
 │   ├── build_features.py      # Bygger ML-features från kanaldata
 │   ├── filter_channels.py     # Filtrerar bort storbolag och kanaler utan tydlig IP
 │   ├── rising_star_model.py   # XGBoost-modell för tillväxtprediktering
@@ -173,20 +172,6 @@ Rensar och filtrerar rådata:
 - **Behåller bara europeiska kanaler** (26 länder: SE, GB, DE, FR, PL, ES, IT, NL, BE, AT, FI, PT, IE, CH, CZ, HU, RO, GR, SK, HR, BG, LT, LV, EE, NO, DK)
 
 **Sparar till:** `data/interim/channels_clean.csv`, `data/interim/videos_clean.csv`
-
----
-
-### `build_target.py`
-Beräknar targetvariabeln **yv** (YouTube-värde per video):
-
-```
-yv = avg_views_per_video × monetization_rate × CPM / 1000
-```
-
-- `monetization_rate` = 0.45 (45 % av visningar är monetiserade, branschstandard)
-- `CPM` = land-specifikt värde (t.ex. GB = 4.5, SE = 3.5, DE = 4.0, standardvärde = 2.5)
-
-**Sparar till:** `data/processed/model_dataset_with_target.csv`
 
 ---
 
@@ -273,9 +258,6 @@ collect_data.py  -->  data/raw/channels_raw.csv
     v
 preprocess.py    -->  data/interim/channels_clean.csv
                       data/interim/videos_clean.csv
-    |
-    v
-build_target.py  -->  data/processed/model_dataset_with_target.csv
     |
     v
 build_features.py + filter_channels.py
