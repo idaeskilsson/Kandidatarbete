@@ -9,3 +9,5 @@ shap
 matplotlib
 torch
 beautifulsoup4
+undetected-chromedriver
+selenium
